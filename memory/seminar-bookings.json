@@ -1,0 +1,115 @@
+{
+  "bookings": [
+    {
+      "messageId": "19c454737fe1edc3",
+      "name": "小澤幸二（総務）",
+      "email": "k.ozawa@infocom.co.jp",
+      "dateTime": "2026-02-12T15:00:00+09:00",
+      "meetUrl": "https://meet.google.com/imm-pckv-xey?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19c4549532a69146"
+    },
+    {
+      "messageId": "19be82f52e0ff2ff",
+      "name": "Y H",
+      "email": "yuhatada@gmail.com",
+      "dateTime": "2026-01-29T12:00:00+09:00",
+      "meetUrl": "https://meet.google.com/uci-ogga-ntd?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19be837ddd153aa8"
+    },
+    {
+      "messageId": "19bde2122e31738c",
+      "name": "木下眞豪",
+      "email": "kinoshita@goofy-inc.com",
+      "dateTime": "2026-01-22T19:00:00+09:00",
+      "meetUrl": "https://meet.google.com/kod-jagj-rrd?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19bde23933b54d5f"
+    },
+    {
+      "messageId": "19bda6769b4a5d48",
+      "name": "Yoichiro Suzuki",
+      "email": "yoh0824@gmail.com",
+      "dateTime": "2026-01-31T16:00:00+09:00",
+      "meetUrl": "https://meet.google.com/nvj-nadb-kqd?hs=224",
+      "autoReplied": true,
+      "paid": false,
+      "squareMessageId": null,
+      "cancelled": true
+    },
+    {
+      "messageId": "19bcc8d687ee4492",
+      "name": "Tatsuya Kimoto",
+      "email": "kimoto.t@keima.co.jp",
+      "dateTime": "2026-01-22T12:00:00+09:00",
+      "meetUrl": "https://meet.google.com/rnw-yymt-gny?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19bcc9238ed0308b"
+    },
+    {
+      "messageId": "19bc5f99f2cc9b78",
+      "name": "津田寛介",
+      "email": "k.tsuda@tsuda-sr-office.com",
+      "dateTime": "2026-01-21T18:00:00+09:00",
+      "meetUrl": "https://meet.google.com/pzw-mtvz-mck?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19bd4fcdc5f4b1f3"
+    },
+    {
+      "messageId": "19b1300846f6338f",
+      "name": "小梅川博之",
+      "email": "hk7701673@gmail.com",
+      "dateTime": "2025-12-14T14:00:00+09:00",
+      "meetUrl": "https://meet.google.com/ddr-hutz-qbu?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19b1308afe518b5c"
+    },
+    {
+      "messageId": "19aed244e7613b0d",
+      "name": "原島 輝明",
+      "email": "harashima.t@tsuda-sr-office.com",
+      "dateTime": "2025-12-09T18:00:00+09:00",
+      "meetUrl": "https://meet.google.com/mxt-tqpe-mou?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19aed26c595cd025"
+    },
+    {
+      "messageId": "19ad7855239d124b",
+      "name": "内田 忠和",
+      "email": "uchida.t@tsuda-sr-office.com",
+      "dateTime": "2025-12-04T18:00:00+09:00",
+      "meetUrl": "https://meet.google.com/kiv-qitd-izx?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19acef43e5a808f6"
+    },
+    {
+      "messageId": "19ac81f304a1ebd9",
+      "name": "芦原亜紀",
+      "email": "ashihara.aki@solasto.co.jp",
+      "dateTime": "2025-12-12T14:00:00+09:00",
+      "meetUrl": "https://meet.google.com/jkk-jggd-sis?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19ab9cddb87e5f82"
+    },
+    {
+      "messageId": "19ab9c5caf20bc60",
+      "name": "芦原亜紀",
+      "email": "ashihara.aki@solasto.co.jp",
+      "dateTime": "2025-11-28T14:00:00+09:00",
+      "meetUrl": "https://meet.google.com/stk-qnea-dqb?hs=224",
+      "autoReplied": true,
+      "paid": true,
+      "squareMessageId": "19ab9cddb87e5f82"
+    }
+  ]
+}
