@@ -2,6 +2,9 @@
 import { NextResponse } from 'next/server';
 import { getGA4Client, getSheetsClient } from '@/lib/google-auth';
 
+// Ensure this API route is always dynamic
+export const dynamic = 'force-dynamic';
+
 // Helper to format date YYYY-MM-DD
 const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
