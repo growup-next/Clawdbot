@@ -36,11 +36,19 @@ interface DeviceData {
   color: string;
 }
 
+interface CountryData {
+  name: string;
+  value: number;
+  color: string;
+}
+
 interface DashboardData {
   kpi: KPIData;
   trend: TrendData[];
+  daily: TrendData[]; // New: Daily Activity
   device: DeviceData[];
-  propertyId?: string; // Added for debug
+  country: CountryData[]; // New: User Attribute (Geo)
+  propertyId?: string;
 }
 
 // Helper: Calculate percentage change
@@ -102,6 +110,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<DashboardData | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const [chartRange, setChartRange] = useState<'12m' | '30d'>('12m');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,6 +123,9 @@ export default function Dashboard() {
         }
         
         const jsonData = await res.json();
+        // Fallback for daily/country if older API response format
+        if (!jsonData.daily) jsonData.daily = [];
+        if (!jsonData.country) jsonData.country = [];
         setData(jsonData);
         setLoading(false);
 
@@ -143,10 +155,49 @@ export default function Dashboard() {
                 { name: '2025/12', users: 1900, sessions: 2850 },
                 { name: '2026/01', users: 2100, sessions: 3100 },
             ],
+            daily: [
+              { name: '01/12', users: 120, sessions: 180 },
+              { name: '01/13', users: 150, sessions: 220 },
+              { name: '01/14', users: 130, sessions: 190 },
+              { name: '01/15', users: 140, sessions: 210 },
+              { name: '01/16', users: 180, sessions: 260 },
+              { name: '01/17', users: 210, sessions: 310 }, // Weekend spike
+              { name: '01/18', users: 230, sessions: 340 },
+              { name: '01/19', users: 160, sessions: 240 },
+              { name: '01/20', users: 150, sessions: 230 },
+              { name: '01/21', users: 140, sessions: 220 },
+              { name: '01/22', users: 170, sessions: 250 },
+              { name: '01/23', users: 190, sessions: 280 },
+              { name: '01/24', users: 220, sessions: 330 },
+              { name: '01/25', users: 240, sessions: 360 },
+              { name: '01/26', users: 160, sessions: 240 },
+              { name: '01/27', users: 150, sessions: 230 },
+              { name: '01/28', users: 140, sessions: 210 },
+              { name: '01/29', users: 130, sessions: 200 },
+              { name: '01/30', users: 170, sessions: 260 },
+              { name: '01/31', users: 210, sessions: 310 },
+              { name: '02/01', users: 230, sessions: 340 },
+              { name: '02/02', users: 160, sessions: 240 },
+              { name: '02/03', users: 150, sessions: 230 },
+              { name: '02/04', users: 140, sessions: 210 },
+              { name: '02/05', users: 130, sessions: 200 },
+              { name: '02/06', users: 170, sessions: 260 },
+              { name: '02/07', users: 210, sessions: 310 },
+              { name: '02/08', users: 230, sessions: 340 },
+              { name: '02/09', users: 160, sessions: 240 },
+              { name: '02/10', users: 150, sessions: 230 },
+            ],
             device: [
                 { name: 'Mobile', value: 8500, color: '#3b82f6' },
                 { name: 'Desktop', value: 5200, color: '#10b981' },
                 { name: 'Tablet', value: 1720, color: '#f59e0b' },
+            ],
+            country: [
+              { name: 'Japan', value: 12400, color: '#8b5cf6' },
+              { name: 'United States', value: 1800, color: '#ec4899' },
+              { name: 'Taiwan', value: 650, color: '#6366f1' },
+              { name: 'Korea', value: 320, color: '#14b8a6' },
+              { name: 'China', value: 250, color: '#f97316' },
             ]
         };
         setData(mockData);
@@ -263,16 +314,26 @@ export default function Dashboard() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                 <TrendingUp className="text-blue-500" size={20} />
-                年間トラフィック推移
+                {chartRange === '12m' ? '年間トラフィック推移' : '過去30日のアクティビティ'}
               </h2>
               <div className="bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex text-xs font-medium">
-                <button className="px-3 py-1 bg-white dark:bg-slate-600 shadow-sm rounded-md text-slate-800 dark:text-white">過去1年</button>
-                <button className="px-3 py-1 text-slate-500 dark:text-slate-400 hover:text-slate-700">過去30日</button>
+                <button 
+                  onClick={() => setChartRange('12m')}
+                  className={`px-3 py-1 shadow-sm rounded-md transition-all ${chartRange === '12m' ? 'bg-white dark:bg-slate-600 text-slate-800 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'}`}
+                >
+                  過去1年
+                </button>
+                <button 
+                  onClick={() => setChartRange('30d')}
+                  className={`px-3 py-1 shadow-sm rounded-md transition-all ${chartRange === '30d' ? 'bg-white dark:bg-slate-600 text-slate-800 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700'}`}
+                >
+                  過去30日
+                </button>
               </div>
             </div>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data.trend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart data={chartRange === '12m' ? data.trend : data.daily} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
@@ -283,7 +344,7 @@ export default function Dashboard() {
                       <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} minTickGap={30} />
                   <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" opacity={0.5} />
                   <Tooltip 
@@ -349,7 +410,7 @@ export default function Dashboard() {
         </div>
 
         {/* Secondary Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-8">
            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -367,6 +428,30 @@ export default function Dashboard() {
                     <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={32}>
                       {data.device.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+           </motion.div>
+
+           <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700"
+            >
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-6">地域別ユーザー分布 (Top 5)</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data.country} layout="vertical" margin={{ left: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} opacity={0.3} />
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} width={100} tick={{fill: '#64748b', fontSize: 14, fontWeight: 500}} />
+                    <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px' }} />
+                    <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={24}>
+                      {data.country.map((entry, index) => (
+                        <Cell key={`cell-country-${index}`} fill={entry.color} />
                       ))}
                     </Bar>
                   </BarChart>

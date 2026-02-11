@@ -132,10 +132,36 @@ export async function GET(request: Request) {
       metrics: [{ name: 'activeUsers' }]
     };
 
-    const [kpiResponse, trendResponse, deviceResponse] = await Promise.all([
+    // 4. Daily Trend Report (Last 30 days)
+    const todayStr = formatDate(today);
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    const dailyRange = { startDate: formatDate(thirtyDaysAgo), endDate: todayStr };
+
+    const dailyRequest = {
+      property: `properties/${propertyId}`,
+      dateRanges: [dailyRange],
+      dimensions: [{ name: 'date' }], // YYYYMMDD
+      metrics: [{ name: 'activeUsers' }, { name: 'sessions' }],
+      orderBys: [{ dimension: { dimensionName: 'date' } }]
+    };
+
+    // 5. Geo/User Attribute Report (Country)
+    const geoRequest = {
+      property: `properties/${propertyId}`,
+      dateRanges: [dateRanges[0]], // Last 365 days
+      dimensions: [{ name: 'country' }],
+      metrics: [{ name: 'activeUsers' }],
+      orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+      limit: 5
+    };
+
+    const [kpiResponse, trendResponse, deviceResponse, dailyResponse, geoResponse] = await Promise.all([
       client.runReport(kpiRequest),
       client.runReport(trendRequest),
-      client.runReport(deviceRequest)
+      client.runReport(deviceRequest),
+      client.runReport(dailyRequest),
+      client.runReport(geoRequest)
     ]);
 
     // Process KPI Data
@@ -180,10 +206,31 @@ export async function GET(request: Request) {
       color: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'][index % 4] // Blue, Green, Amber, Red
     })) || [];
 
+    // Process Daily Trend Data
+    const dailyData = dailyResponse[0].rows?.map(row => {
+      const ymd = row.dimensionValues?.[0]?.value || ''; // YYYYMMDD
+      // Format to YYYY/MM/DD
+      const name = ymd.length === 8 ? `${ymd.substring(0, 4)}/${ymd.substring(4, 6)}/${ymd.substring(6, 8)}` : ymd;
+      return {
+        name,
+        users: parseInt(row.metricValues?.[0]?.value || '0'),
+        sessions: parseInt(row.metricValues?.[1]?.value || '0')
+      };
+    }) || [];
+
+    // Process Geo/Country Data
+    const countryData = geoResponse[0].rows?.map((row, index) => ({
+      name: row.dimensionValues?.[0]?.value || 'Unknown',
+      value: parseInt(row.metricValues?.[0]?.value || '0'),
+      color: ['#8b5cf6', '#ec4899', '#6366f1', '#14b8a6', '#f97316'][index % 5] // Different palette
+    })) || [];
+
     return NextResponse.json({
       kpi: kpiData,
       trend: trendData,
+      daily: dailyData,
       device: deviceData,
+      country: countryData,
       propertyId // Return ID for verification
     });
 
